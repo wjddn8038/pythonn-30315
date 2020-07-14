@@ -1,0 +1,35 @@
+I got PythonApplication1.py into the Sources of the C# Windows Form Application. On specific condition I write it into the Program Data folder this way:
+
+File.WriteAllBytes(@"%ProgramData%\\Folder\\PythonApplication1.py", Resources.PythonApplication1);
+and then with specific condition C# runs Python Application from program data folder, this way:
+
+Process.Start(@"%ProgramData%\\Folder\\PythonApplication1.py");
+On the side of Python code I got second thing, it writes some data into the text document, which is located by the same path, but creation of it happens in Python itself, but it can be done from C# code, no matter, here:
+
+path = (@"%ProgramData%\Folder\doc.txt")
+but python code must write in this file by same program data path:
+
+data = open (r'doc.txt', 'w')
+and to write, just by same location, as both are there:
+
+with open(r'doc.txt') as my_file:   
+The problem is, when I run this python code as it shown above, this way:
+
+ Process.Start(@"%ProgramData%\\Folder\\PythonApplication1.py");
+It does two wrong things, which does not happens, if it is not %ProgramData% directory and located with C# .exe in debug folder, just by Process.Start("PythonApplication1.py");, or if I run Python Code inside %ProgramData%\Folder path with doc.txt, just by hand. It creates and writes directly into the file, all is correct.
+
+Otherwise if Process.Start(@"%ProgramData%\\Folder\\PythonApplication1.py"); I got second result, it does not writes data into the doc.txt by %ProgramData%\Folder and python code creates it out of program data folder in debug folder with C# .exe.
+
+So question is how to create and write from python code into the doc.txt located by C# Application "%ProgramData%\Folder" path.
+
+Seems like, if PythonApplication1.py is exist inside ProgramData:
+
+File.WriteAllBytes(@"%ProgramData%\\TAOZ\\PythonApplication1.py", Resources.PythonApplication1);
+And if executed by hand it creates text document and writes to it, it must do the with Process.Start, but not.
+
+also I tried to use star info, but not sure if this is correct, anyway I got same result:
+
+    ProcessStartInfo startInfo = new ProcessStartInfo(@"%ProgramData%\\folder\\PythonApplication1.py");
+       startInfo.WindowStyle = ProcessWindowStyle.Minimized;
+       Process.Start(startInfo);
+So seems like I need two things here. To expand the search environment variable %ProgramData%. and also need to use the start up info to tell the process to start on that particular folder. Otherwise, the current working folder will be the same folder as application I guess, but not sure how to do it, and if it is reason of problem, need your help.
